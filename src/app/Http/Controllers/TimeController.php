@@ -43,7 +43,7 @@ class TimeController extends Controller
         if( !empty($time->end)){
             return redirect('/')->with('error', '出勤していません');
         }
-        // else if( empty($rest->restend) && !empty($rest->reststart)){
+        // else if( !empty($rest->reststart) && empty($rest->restnd)){
         //     return redirect('/')->with('error', '休憩終了してください');
         // }
         $time -> update([
