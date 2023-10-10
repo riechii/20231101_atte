@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Time;
+use App\Models\Rest;
+use App\Models\User;
 use Carbon\Carbon;
 use Auth;
 
@@ -21,7 +23,6 @@ class TimeController extends Controller
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
-        //打刻は１日一回まで
         if(new Carbon($time->date) == Carbon::today()){
             return redirect('/')->with('error', '今日は既に出勤しています');
         }
@@ -43,7 +44,7 @@ class TimeController extends Controller
         if( !empty($time->end)){
             return redirect('/')->with('error', '出勤していません');
         }
-        // else if( !empty($rest->reststart) && empty($rest->restnd)){
+        // else if( empty($rest->restend)){
         //     return redirect('/')->with('error', '休憩終了してください');
         // }
         $time -> update([
@@ -54,9 +55,14 @@ class TimeController extends Controller
     }
 
     //日付別勤怠ページ
-    public function show()
+    public function show(Request $request)
     {
+        // $user = Auth::user();
+        // $user = User::all();
+
         $time = Time::all();
-        return view('attendance');
+        $time = Time::simplePaginate(1);
+
+        return view('attendance', ['time' => $time]);
     }
 }
