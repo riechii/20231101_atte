@@ -17,20 +17,32 @@
                     <th class='attendance-table__tti'>休憩時間</th>
                     <th class='attendance-table__tti'>勤務時間</th>
                 </tr>
-                @foreach($time as $tim)
+                
                 
                 <tr class='attendance-table__row'>
+                    @foreach($time as $tim)
+                    <td class='attendance-table__item'>
+           
+                    {{$tim->user->name}}
 
-                    <td class='attendance-table__item'>{{$tim->user_id}}</td>
+                    </td>
+                    
                     
                     <td class='attendance-table__item'>{{$tim->start}}</td>
                    
                     <td class='attendance-table__item'>{{$tim->end}}</td>
-                    <td class='attendance-table__item'>テスト</td>
-                    <td class='attendance-table__item'>テスト</td>
+                    <td class='attendance-table__item'>
+                        {{gmdate("H:i:s",(strtotime($rest->restend)-strtotime($rest->reststart)))}}
+                        
+                      
+                    </td>
+                    <td class='attendance-table__item'>
+                        {{gmdate("H:i:s",(strtotime($tim->end)-strtotime($tim->start)))}}
+                    </td>
                 </tr>
                 @endforeach
-             
+
+
             </table>
         </div>
     </div>

@@ -20,11 +20,6 @@ class RestController extends Controller
         }
         $time = Time::where('user_id', $user->id)->latest()->first();
         $rest = Rest::where('time_id', $time->id)->latest()->first();
-        if(!empty($time->end)){
-            return redirect('/')->with('error', '出勤していないので休憩できません');
-        }else if(empty($rest->restend) && !empty($rest->reststart)){
-            return redirect('/')->with('error', '休憩中です');
-        }
 
         $rest = Rest::create([
             'time_id' => $time->id,
@@ -44,9 +39,6 @@ class RestController extends Controller
         $time = Time::where('user_id', $user->id)->latest()->first();
         $rest = Rest::where('time_id', $time->id)->latest()->first();
 
-        if( !empty($rest->restend) && !empty($rest->reststart)){
-            return redirect('/')->with('error', '休憩していません');
-        }
         $rest -> update([
             'restend' => carbon::now(),
         ]);

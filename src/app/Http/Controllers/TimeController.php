@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Time;
 use App\Models\Rest;
 use App\Models\User;
@@ -14,8 +15,10 @@ class TimeController extends Controller
     //打刻画面表示
     public function index()
     {
-        $time = Time::all();
-        return view('index', ['time' => $time]);
+        $user = Auth::user();
+        $time = Time::where('user_id', $user->id)->latest()->first();
+        $rest = Rest::where('time_id', $time->id)->latest()->first();
+        return view('index', compact('time', 'rest'));
     }
 
     //勤務開始処理
@@ -23,9 +26,7 @@ class TimeController extends Controller
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
-        if(new Carbon($time->date) == Carbon::today()){
-            return redirect('/')->with('error', '今日は既に出勤しています');
-        }
+        $rest = Rest::where('time_id', $time->id)->latest()->first();
 
         $time = Time::create([
             'user_id' => $user->id,
@@ -41,12 +42,8 @@ class TimeController extends Controller
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
-        if( !empty($time->end)){
-            return redirect('/')->with('error', '出勤していません');
-        }
-        // else if( empty($rest->restend)){
-        //     return redirect('/')->with('error', '休憩終了してください');
-        // }
+        $rest = Rest::where('time_id', $time->id)->latest()->first();
+
         $time -> update([
             'end' => carbon::now()
         ]);
@@ -58,11 +55,48 @@ class TimeController extends Controller
     public function show(Request $request)
     {
         // $user = Auth::user();
-        // $user = User::all();
+        $user = User::all();
+        // $users = User::get();
 
         $time = Time::all();
-        $time = Time::simplePaginate(1);
+        foreach ($time as $time){
+            $id = $time->id;
+        }
 
-        return view('attendance', ['time' => $time]);
+        $rest = Rest::all();
+        $rest = Rest::where('time_id', $time->id)->latest()->first();
+        
+        // $reststart = $rest->reststart;
+        // $restend = $rest->restend;
+        // $work = (strtotime($restend) - strtotime($reststart)); 
+        // $hours = floor($work / 3600);
+        // $minutes = floor(($work / 60) % 60);
+        // $seconds = floor($work % 60);
+        // $hms = sprintf("%2d:%02d:%02d", $hours, $minutes, $seconds);
+        // echo $hms;
+
+
+
+        // $rest = Rest::select('time_id','reststart','restend')->groupBy('time_id','reststart','restend')->get();
+
+
+
+        // $reststart = new Carbon($rest->reststart);
+        // $restend = new Carbon($rest->restend);
+        // $resttime = $restend->diffInSeconds($reststart);
+
+
+        // $time = Time::join('rests','rests.time_id','=','times.id')->get();
+        $time = Time::latest( 'created_at' )->simplePaginate(1);
+
+
+        $time->user_id = $request->user()->id;
+        
+
+
+        
+
+
+        return view('attendance', compact('time', 'rest'));
     }
 }
