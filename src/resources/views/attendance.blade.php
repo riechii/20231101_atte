@@ -36,6 +36,7 @@
                         
                       
                     </td>
+
                     <td class='attendance-table__item'>
                         {{gmdate("H:i:s",(strtotime($tim->end)-strtotime($tim->start)))}}
                     </td>

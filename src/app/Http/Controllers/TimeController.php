@@ -73,8 +73,13 @@ class TimeController extends Controller
         // $minutes = floor(($work / 60) % 60);
         // $seconds = floor($work % 60);
         // $hms = sprintf("%2d:%02d:%02d", $hours, $minutes, $seconds);
-        // echo $hms;
-
+        //  echo $hms;
+        
+        // $rest = DB::table('rests')
+        // ->select('time_id')
+        // ->selectRaw('SUM($hms) AS total_rest')
+        // ->groupBy('time_id')
+        // ->get();
 
 
         // $rest = Rest::select('time_id','reststart','restend')->groupBy('time_id','reststart','restend')->get();
