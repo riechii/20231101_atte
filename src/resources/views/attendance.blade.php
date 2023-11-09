@@ -4,10 +4,16 @@
 @endsection
 @section('content')
     <div class='attendance'>
-        @foreach($time as $tim)
-        <h2 class='attendance-date'>{{$tim->date}}</h2>
-        @endforeach
-        {{ $time->links() }}
+        <form class="attendance_button" action="/attendance_list" method="get" >
+            @csrf
+            <button class="attendance-next" type="submit" value="{{  \Carbon\Carbon::yesterday()->format('Y-m-d')}}">&lt;</button>
+        </form>
+        <h2 class='attendance-date'>{{  \Carbon\Carbon::today()->format('Y-m-d')}}</h2>
+        <form class="attendance_button" action="/attendance_list" method="get" >
+            @csrf
+            <button class="attendance-next" type="submit" >&gt;</button>
+        </form>
+        
         <div class='attendance-table'>
             <table class='attendance-table__inner'>
                 <tr class='attendance-table__row'>
@@ -32,7 +38,9 @@
                    
                     <td class='attendance-table__item'>{{$tim->end}}</td>
                     <td class='attendance-table__item'>
-                        {{gmdate("H:i:s",(strtotime($rest->restend)-strtotime($rest->reststart)))}}
+                       
+                    
+                    {{$hms}}
                         
                       
                     </td>
@@ -42,7 +50,7 @@
                     </td>
                 </tr>
                 @endforeach
-
+{{ $time->links() }}
 
             </table>
         </div>

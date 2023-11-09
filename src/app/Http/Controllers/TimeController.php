@@ -55,7 +55,7 @@ class TimeController extends Controller
     public function show(Request $request)
     {
         // $user = Auth::user();
-        $user = User::all();
+        // $user = User::all();
         // $users = User::get();
 
         $time = Time::all();
@@ -63,17 +63,30 @@ class TimeController extends Controller
             $id = $time->id;
         }
 
-        $rest = Rest::all();
-        $rest = Rest::where('time_id', $time->id)->latest()->first();
+        // $rest = Rest::all();
+        // $rest = Rest::where('time_id', $time->id)->latest()->first();
+        $rests = Rest::where('time_id', $time->id)->get();
         
+        //複数の結果が予想されすものは配列になる
+
+        foreach($rests as $rest){
+
+        $reststart = $rest->reststart;
+        $restend = $rest->restend;
+        $break = (strtotime($restend) - strtotime($reststart));
+
+        }
+
+
         // $reststart = $rest->reststart;
         // $restend = $rest->restend;
-        // $work = (strtotime($restend) - strtotime($reststart)); 
-        // $hours = floor($work / 3600);
-        // $minutes = floor(($work / 60) % 60);
-        // $seconds = floor($work % 60);
-        // $hms = sprintf("%2d:%02d:%02d", $hours, $minutes, $seconds);
-        //  echo $hms;
+        // $break = (strtotime($restend) - strtotime($reststart)); 
+        $hours = floor($break / 3600);
+        $minutes = floor(($break / 60) % 60);
+        $seconds = floor($break % 60);
+        $hms = sprintf("%2d:%02d:%02d", $hours, $minutes, $seconds);
+
+        // //  echo $hms;
         
         // $rest = DB::table('rests')
         // ->select('time_id')
@@ -92,16 +105,23 @@ class TimeController extends Controller
 
 
         // $time = Time::join('rests','rests.time_id','=','times.id')->get();
-        $time = Time::latest( 'created_at' )->simplePaginate(1);
+        // $today=Carbon::today();
+        // $time = Time::whereDate('created_at', $today)->simplePaginate(3);
+        $time = Time::latest( 'created_at' )->simplePaginate(3);
 
 
-        $time->user_id = $request->user()->id;
-        
+        // $time->user_id = $request->user()->id;
 
 
-        
+        return view('attendance', compact('time', 'rests','hms'));
+    }
+
+    public function list(Request $request){
+
+        $today = Carbon::today($time->date);
+        $yesterday = Carbon::yesterday();
 
 
-        return view('attendance', compact('time', 'rest'));
+        return view('attendance',compact('yesterday','today'));
     }
 }

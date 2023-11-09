@@ -21,5 +21,6 @@ Route::middleware('auth')->group(function () {
 });
 Route::post('/time', [TimeController::class, 'store']);
 Route::post('/time/update', [TimeController::class, 'update']);
+Route::get('/attendance_list', [TimeController::class, 'list']);
 Route::post('/rest', [RestController::class, 'store']);
 Route::post('/rest/update', [RestController::class, 'update']);
