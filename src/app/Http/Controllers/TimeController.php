@@ -17,8 +17,13 @@ class TimeController extends Controller
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
+        if(!isset($time->id)){
+            
+            return view('test');
+        }else{
         $rest = Rest::where('time_id', $time->id)->latest()->first();
         return view('index', compact('time', 'rest'));
+        }
     }
 
     //勤務開始処理
@@ -26,7 +31,7 @@ class TimeController extends Controller
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
-        $rest = Rest::where('time_id', $time->id)->latest()->first();
+        // $rest = Rest::where('time_id', $time->id)->latest()->first();
 
         $time = Time::create([
             'user_id' => $user->id,
@@ -118,10 +123,10 @@ class TimeController extends Controller
 
     public function list(Request $request){
 
-        $today = Carbon::today($time->date);
+        $today = Carbon::today();
+        $date = Time::whereDate('date', $today)->get();
         $yesterday = Carbon::yesterday();
 
-
-        return view('attendance',compact('yesterday','today'));
+        return view('attendance',compact('yesterday','today','$date'));
     }
 }
