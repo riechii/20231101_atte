@@ -4,14 +4,14 @@
 @endsection
 @section('content')
     <div class='attendance'>
-        <form class="attendance_button" action="/attendance_list" method="get" >
+        <form class="attendance_button" action="/attendance/nextDay" method="post" >
             @csrf
-            <button class="attendance-next" type="submit" value="{{  \Carbon\Carbon::yesterday()->format('Y-m-d')}}">&lt;</button>
+            <button class="attendance-next" name='next' type="submit" value="yesterday">&lt;</button>
         </form>
-        <h2 class='attendance-date'>{{  \Carbon\Carbon::today()->format('Y-m-d')}}</h2>
-        <form class="attendance_button" action="/attendance_list" method="get" >
+        <h2 class='attendance-date'>{{ $today->format('Y-m-d')}}</h2>
+        <form class="attendance_button" action="/attendance/nextDay" method="post" >
             @csrf
-            <button class="attendance-next" type="submit" >&gt;</button>
+            <button class="attendance-next" name='next' type="submit" value="tomorrow">&gt;</button>
         </form>
         
         <div class='attendance-table'>
@@ -26,33 +26,33 @@
                 
                 
                 <tr class='attendance-table__row'>
-                    @foreach($time as $tim)
+                    @foreach($dates as $date)
                     <td class='attendance-table__item'>
            
-                    {{$tim->user->name}}
+                    {{$date->user->name}}
 
                     </td>
                     
                     
-                    <td class='attendance-table__item'>{{$tim->start}}</td>
+                    <td class='attendance-table__item'>{{$date->start}}</td>
                    
-                    <td class='attendance-table__item'>{{$tim->end}}</td>
+                    <td class='attendance-table__item'>{{$date->end}}</td>
                     <td class='attendance-table__item'>
                        
-                    
-                    {{$hms}}
-                        
+                    {{$date->rest}}
+                   
                       
                     </td>
 
                     <td class='attendance-table__item'>
-                        {{gmdate("H:i:s",(strtotime($tim->end)-strtotime($tim->start)))}}
+                        {{gmdate("H:i:s",(strtotime($date->end)-strtotime($date->start)))}}
                     </td>
                 </tr>
                 @endforeach
-{{ $time->links() }}
+
 
             </table>
         </div>
+        {{ $dates->links() }}
     </div>
 @endsection

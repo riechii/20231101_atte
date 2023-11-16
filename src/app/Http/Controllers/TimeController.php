@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
 use App\Models\Time;
 use App\Models\Rest;
 use App\Models\User;
@@ -18,8 +19,8 @@ class TimeController extends Controller
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
         if(!isset($time->id)){
-            
-            return view('test');
+
+            return view('new_screen');
         }else{
         $rest = Rest::where('time_id', $time->id)->latest()->first();
         return view('index', compact('time', 'rest'));
@@ -31,7 +32,6 @@ class TimeController extends Controller
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
-        // $rest = Rest::where('time_id', $time->id)->latest()->first();
 
         $time = Time::create([
             'user_id' => $user->id,
@@ -59,74 +59,55 @@ class TimeController extends Controller
     //日付別勤怠ページ
     public function show(Request $request)
     {
-        // $user = Auth::user();
-        // $user = User::all();
-        // $users = User::get();
-
         $time = Time::all();
         foreach ($time as $time){
-            $id = $time->id;
+            $ids[] = $time->id;
         }
+        $rests = Rest::whereIn('time_id', $ids)->get();
+        // $rests = Rest::where('time_id', $time->id)->get();
 
-        // $rest = Rest::all();
-        // $rest = Rest::where('time_id', $time->id)->latest()->first();
-        $rests = Rest::where('time_id', $time->id)->get();
-        
         //複数の結果が予想されすものは配列になる
-
+        $totalrest = 0;
         foreach($rests as $rest){
 
         $reststart = $rest->reststart;
         $restend = $rest->restend;
         $break = (strtotime($restend) - strtotime($reststart));
-
+        $totalrest += $break;
         }
 
 
-        // $reststart = $rest->reststart;
-        // $restend = $rest->restend;
-        // $break = (strtotime($restend) - strtotime($reststart)); 
-        $hours = floor($break / 3600);
-        $minutes = floor(($break / 60) % 60);
-        $seconds = floor($break % 60);
+        $hours = floor($totalrest / 3600);
+        $minutes = floor(($totalrest / 60) % 60);
+        $seconds = floor($totalrest % 60);
         $hms = sprintf("%2d:%02d:%02d", $hours, $minutes, $seconds);
 
-        // //  echo $hms;
-        
-        // $rest = DB::table('rests')
-        // ->select('time_id')
-        // ->selectRaw('SUM($hms) AS total_rest')
-        // ->groupBy('time_id')
-        // ->get();
-
-
-        // $rest = Rest::select('time_id','reststart','restend')->groupBy('time_id','reststart','restend')->get();
-
-
-
-        // $reststart = new Carbon($rest->reststart);
-        // $restend = new Carbon($rest->restend);
-        // $resttime = $restend->diffInSeconds($reststart);
-
-
-        // $time = Time::join('rests','rests.time_id','=','times.id')->get();
-        // $today=Carbon::today();
-        // $time = Time::whereDate('created_at', $today)->simplePaginate(3);
-        $time = Time::latest( 'created_at' )->simplePaginate(3);
-
-
-        // $time->user_id = $request->user()->id;
-
-
-        return view('attendance', compact('time', 'rests','hms'));
-    }
-
-    public function list(Request $request){
-
         $today = Carbon::today();
-        $date = Time::whereDate('date', $today)->get();
-        $yesterday = Carbon::yesterday();
 
-        return view('attendance',compact('yesterday','today','$date'));
+        $dates=Time::whereDate('date', $today)->paginate(1);
+
+        return view('attendance', compact('time', 'rests','hms','dates','today'));
+    }
+    //日付別勤怠ページリスト
+    public function nextDay(Request $request){
+
+        // $today = Carbon::today();
+        // // $today = new Carbon($request->date);
+        // $yesterday = Carbon::yesterday();
+        // // $yesterday = (new Carbon($request->date))->subDay();
+        // $tomorrow = Carbon::tomorrow();
+        // // $tomorrow = (new Carbon($request->date))->addDay();
+        $next = $request->input('next');
+        $today = Carbon::today();
+
+        if ($next === 'yesterday') {
+            $today = $today->subDay();
+            $dates=Time::whereDate('date', $today)->paginate(1);
+        } elseif ($next === 'tomorrow') {
+            $today = $today->addDay();
+            $dates=Time::whereDate('date', $today)->paginate(1);
+        }
+
+        return  view('attendance', compact('dates','today'));
     }
 }

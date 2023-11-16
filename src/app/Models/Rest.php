@@ -17,6 +17,6 @@ class Rest extends Model
 
     public function time()
     {
-    return $this->hasMany(Time::class);
+    return $this->belongsTo(Time::class);
     }
 }

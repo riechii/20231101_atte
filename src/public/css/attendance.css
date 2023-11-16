@@ -21,9 +21,7 @@
 
     padding-top: 30px;
 }
-.attendance-table {
-   
-}
+
 .attendance-table__inner {
     width: 90%;
     text-align: center;
@@ -37,4 +35,8 @@
 }
 .attendance-table__item {
     padding: 20px;
+}
+.pagination li {
+    display: inline-block;
+    color: blue;
 }
