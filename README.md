@@ -18,3 +18,5 @@ laravel学習のために制作しました。要件定義や成果物の機能�
 ・PHP 7.4.9
 ## テーブル設計
 ![Atte_table](https://github.com/riechii/20231101_atte/blob/main/Atte_table.png)
+## ER図
+![Atte_ER](https://github.com/riechii/20231101_atte/blob/main/Atte_ER.png)
