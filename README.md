@@ -1,7 +1,7 @@
 # Atte
 勤怠管理アプリです。会員登録することで勤怠情報を記録できます。
 また、日付別に勤怠の記録を閲覧することができます。
-![Atteトップ画像](https://github.com/riechii/20231101_atte/blob/main/Atte_top.png)
+![Atte_top](https://github.com/riechii/20231101_atte/blob/main/Atte_top.png)
 ## 作成した目的
 laravel学習のために制作しました。要件定義や成果物の機能、イメージをいただきそれに沿って作成しました。
 ## 機能一覧
@@ -17,3 +17,4 @@ laravel学習のために制作しました。要件定義や成果物の機能�
 ・mysql 10.3.39
 ・PHP 7.4.9
 ## テーブル設計
+![Atte_table](https://github.com/riechii/20231101_atte/blob/main/Atte_table.png)
