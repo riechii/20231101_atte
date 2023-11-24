@@ -17,11 +17,15 @@ use App\Http\Controllers\RestController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [TimeController::class, 'index']);
-    Route::get('/attendance', [TimeController::class, 'show']);
+    Route::get('/attendance', [TimeController::class, 'attendancePage']);
+    Route::get('/userList', [TimeController::class, 'userList']);
 });
-Route::post('/time', [TimeController::class, 'store']);
-Route::post('/time/update', [TimeController::class, 'update']);
+Route::post('/time', [TimeController::class, 'workStart']);
+Route::post('/time/update', [TimeController::class, 'workEnd']);
 Route::get('/attendance/nextDay', [TimeController::class, 'nextDay']);
 Route::post('/attendance/nextDay', [TimeController::class, 'nextDay']);
-Route::post('/rest', [RestController::class, 'store']);
-Route::post('/rest/update', [RestController::class, 'update']);
+Route::get('/userList/detail', [TimeController::class, 'detail']);
+Route::get('/userList/nextMonth', [TimeController::class, 'nextMonth']);
+Route::post('/userList/nextMonth', [TimeController::class, 'nextMonth']);
+Route::post('/rest', [RestController::class, 'restStart']);
+Route::post('/rest/update', [RestController::class, 'restEnd']);

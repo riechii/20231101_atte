@@ -1,35 +1,36 @@
 @extends('layouts.app')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/attendance.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/attendance_list.css') }}" />
 @endsection
 @section('content')
     <div class='attendance'>
-        <form class="attendance_button" action="/attendance/nextDay" method="post" >
+        <form class="attendance_button" action="/userList/nextMonth" method="post" >
             @csrf
-            <button class="attendance-next" name='next' type="submit" value="yesterday">&lt;</button>
+            <button class="attendance-next" name='next' type="submit" value="next_month">&lt;</button>
         </form>
-        <h2 class='attendance-date'>{{ $today->format('Y-m-d')}}</h2>
-        <form class="attendance_button" action="/attendance/nextDay" method="post" >
+        <h2 class='attendance-date'>{{ $month->format('Y-m')}}月
+        </h2>
+        <form class="attendance_button" action="/userList/nextMonth" method="post" >
             @csrf
-            <button class="attendance-next" name='next' type="submit" value="tomorrow">&gt;</button>
+            <button class="attendance-next" name='next' type="submit" value="last_month">&gt;</button>
         </form>
 
         <div class='attendance-table'>
             <table class='attendance-table__inner'>
                 <tr class='attendance-table__row'>
-                    <th class='attendance-table__tti'>名前</th>
+                    <th class='attendance-table__tti'>日付</th>
                     <th class='attendance-table__tti'>勤務開始</th>
                     <th class='attendance-table__tti'>勤務終了</th>
                     <th class='attendance-table__tti'>休憩時間</th>
                     <th class='attendance-table__tti'>勤務時間</th>
                 </tr>
-                @foreach($dates as $date)
+                @foreach($attendanceData as $date)
                 <tr class='attendance-table__row'>
                     <td class='attendance-table__item'>
-                    {{$date->user->name}}
+                    {{$date->date}}
                     </td>
                     <td class='attendance-table__item'>{{$date->start}}</td>
-                    <td class='attendance-table__item'>{{$date->end}}</td>
+                    <td class='attendance-table__item'>     {{$date->end}}</td>
                     <td class='attendance-table__item'>
                     @php
                         $totalRestTime = 0;
@@ -49,6 +50,7 @@
                 @endforeach
             </table>
         </div>
-        {{ $dates->links() }}
+         {{ $attendanceData->links() }}
+
     </div>
 @endsection

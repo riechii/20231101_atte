@@ -28,7 +28,7 @@ class TimeController extends Controller
     }
 
     //勤務開始処理
-    public function store(Request $request)
+    public function workStart(Request $request)
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
@@ -43,7 +43,7 @@ class TimeController extends Controller
     }
 
     //勤務終了処理
-    public function update(Request $request)
+    public function workEnd(Request $request)
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
@@ -57,57 +57,92 @@ class TimeController extends Controller
     }
 
     //日付別勤怠ページ
-    public function show(Request $request)
+    public function attendancePage(Request $request)
     {
         $time = Time::all();
         foreach ($time as $time){
-            $ids[] = $time->id;
+            $id = $time->id;
         }
-        $rests = Rest::whereIn('time_id', $ids)->get();
-        // $rests = Rest::where('time_id', $time->id)->get();
-
-        //複数の結果が予想されすものは配列になる
-        $totalrest = 0;
-        foreach($rests as $rest){
-
-        $reststart = $rest->reststart;
-        $restend = $rest->restend;
-        $break = (strtotime($restend) - strtotime($reststart));
-        $totalrest += $break;
-        }
-
-
-        $hours = floor($totalrest / 3600);
-        $minutes = floor(($totalrest / 60) % 60);
-        $seconds = floor($totalrest % 60);
-        $hms = sprintf("%2d:%02d:%02d", $hours, $minutes, $seconds);
-
+        $rests = Rest::where('time_id', $time->id)->get();
         $today = Carbon::today();
+        $dates = Time::whereDate('date', $today)->paginate(5);
 
-        $dates=Time::whereDate('date', $today)->paginate(1);
-
-        return view('attendance', compact('time', 'rests','hms','dates','today'));
+        return view('attendance', compact('time', 'rests','dates','today'));
     }
-    //日付別勤怠ページリスト
+    //日付別勤怠ページ日付変更ボタン
     public function nextDay(Request $request){
 
-        // $today = Carbon::today();
-        // // $today = new Carbon($request->date);
-        // $yesterday = Carbon::yesterday();
-        // // $yesterday = (new Carbon($request->date))->subDay();
-        // $tomorrow = Carbon::tomorrow();
-        // // $tomorrow = (new Carbon($request->date))->addDay();
         $next = $request->input('next');
-        $today = Carbon::today();
+        $today = session('last_date', Carbon::today());
 
         if ($next === 'yesterday') {
             $today = $today->subDay();
-            $dates=Time::whereDate('date', $today)->paginate(1);
         } elseif ($next === 'tomorrow') {
             $today = $today->addDay();
-            $dates=Time::whereDate('date', $today)->paginate(1);
         }
+        $dates=Time::whereDate('date', $today)->paginate(5);
+        session(['last_date' => $today]);
 
         return  view('attendance', compact('dates','today'));
     }
+
+    //社員一覧ページ
+    public function userList(Request $request){
+        $users = User::orderBy('created_at')->paginate(5);;
+        foreach($users as $user){
+            $id = $user->id;
+        }
+        return view('user_list', compact('users','id'));
+    }
+
+    //社員一覧詳細ページ
+    public function detail(Request $request){
+        $userId = $request->input('user_id');
+        $user = User::find($userId);
+        //詳細押した時のIDをセッションに保存
+        session(['remember_user_id' => $userId]);
+
+        // $rememberMonth = session('remember_month');
+
+        // if($rememberMonth){
+        //     $month = Carbon::parse($rememberMonth);
+        // }else{
+        //     $month = Carbon::today();
+        // }
+        $month = Carbon::today();
+
+        $attendanceData = Time::where('user_id', $userId)
+        ->whereYear('date', $month->year)
+        ->whereMonth('date', $month->month)
+        ->paginate(5);
+
+        // session(['remember_user_id' => $userId,'remember_month' => $month]);
+   session(['remember_user_id']);
+
+        return view('attendance_list',compact('user','month','attendanceData'));
+
+    }
+
+    //社員詳細ページ月変更ボタン
+    public function nextMonth(Request $request){
+        $next = $request->input('next');
+        $month = session('remember_month', Carbon::today());
+
+        $userId = session('remember_user_id');
+
+        if ($next === 'next_month') {
+            $month = $month->subMonth();
+        } elseif ($next === 'last_month') {
+            $month = $month->addMonth();
+        }
+
+        $attendanceData = Time::where('user_id', $userId)
+        ->whereYear('date', $month->year)
+        ->whereMonth('date', $month->month)
+        ->paginate(5);
+
+        session(['remember_month' => $month]);
+        return  view('attendance_list', compact('month','attendanceData'));
+    }
+
 }

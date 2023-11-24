@@ -4,11 +4,13 @@
     background: #f5f5f5;
     text-align: center;
 }
+
 .attendance_button {
     display: inline-block;
 
 
 }
+
 .attendance-next {
     color: blue;
     background-color: #fff;
@@ -16,6 +18,7 @@
     font-size: 20px;
     margin: 0 20px;
 }
+
 .attendance-date {
     display: inline-block;
 
@@ -27,15 +30,19 @@
     text-align: center;
     margin: 0 auto;
 }
+
 .attendance-table__row {
     border-top: solid 1px #808080;
 }
+
 .attendance-table__tti {
     padding: 20px;
 }
+
 .attendance-table__item {
     padding: 20px;
 }
+
 .pagination li {
     display: inline-block;
     color: blue;

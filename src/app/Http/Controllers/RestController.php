@@ -11,7 +11,7 @@ use Auth;
 class RestController extends Controller
 {
     //休憩開始処理
-    public function store(Request $request)
+    public function restStart(Request $request)
     {
         $user = Auth::user();
         $time = Time::get();
@@ -29,7 +29,7 @@ class RestController extends Controller
     }
 
     //休憩終了処理
-    public function update(Request $request)
+    public function restEnd(Request $request)
     {
         $user = Auth::user();
         $time = Time::get();

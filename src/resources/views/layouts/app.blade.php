@@ -19,6 +19,7 @@
                     @if (Auth::check())
                     <li class="header-nav-item"><a class="header-nav-item-list" href="/">ホーム</a></li>
                     <li class="header-nav-item"><a class="header-nav-item-list" href="/attendance">日付一覧</a></li>
+                    <li class="header-nav-item"><a class="header-nav-item-list" href="/userList">社員一覧</a></li>
                     <li class="header-nav-item">
                         <form action="/logout" method="post">
                         @csrf
