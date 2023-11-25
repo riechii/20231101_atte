@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use App\Http\Controllers\TimeController;
 use App\Http\Controllers\RestController;
 
@@ -15,17 +17,29 @@ use App\Http\Controllers\RestController;
 |
 */
 
+Auth::routes(['verify' => true]);
+
+Route::middleware(['auth', 'verified'])->group(function () {
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/', [TimeController::class, 'index']);
     Route::get('/attendance', [TimeController::class, 'attendancePage']);
     Route::get('/userList', [TimeController::class, 'userList']);
 });
+
+
+
 Route::post('/time', [TimeController::class, 'workStart']);
 Route::post('/time/update', [TimeController::class, 'workEnd']);
 Route::get('/attendance/nextDay', [TimeController::class, 'nextDay']);
 Route::post('/attendance/nextDay', [TimeController::class, 'nextDay']);
-Route::get('/userList/detail', [TimeController::class, 'detail']);
+Route::get('/userList/detail', [TimeController::class, 'detail'])->name('detail');
 Route::get('/userList/nextMonth', [TimeController::class, 'nextMonth']);
 Route::post('/userList/nextMonth', [TimeController::class, 'nextMonth']);
 Route::post('/rest', [RestController::class, 'restStart']);
 Route::post('/rest/update', [RestController::class, 'restEnd']);
+
+});
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.layouts')
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/attendance_list.css') }}" />
 @endsection
@@ -50,7 +50,12 @@
                 @endforeach
             </table>
         </div>
-         {{ $attendanceData->links() }}
+        @if(Route::currentRouteName() === 'detail')
+            {{ $attendanceData->appends(request()->input())->links() }}
+        @else
+            {{ $attendanceData->links() }}
+        @endif
+
 
     </div>
 @endsection

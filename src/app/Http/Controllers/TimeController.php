@@ -102,13 +102,6 @@ class TimeController extends Controller
         //詳細押した時のIDをセッションに保存
         session(['remember_user_id' => $userId]);
 
-        // $rememberMonth = session('remember_month');
-
-        // if($rememberMonth){
-        //     $month = Carbon::parse($rememberMonth);
-        // }else{
-        //     $month = Carbon::today();
-        // }
         $month = Carbon::today();
 
         $attendanceData = Time::where('user_id', $userId)
@@ -116,8 +109,7 @@ class TimeController extends Controller
         ->whereMonth('date', $month->month)
         ->paginate(5);
 
-        // session(['remember_user_id' => $userId,'remember_month' => $month]);
-   session(['remember_user_id']);
+        session(['remember_user_id']);
 
         return view('attendance_list',compact('user','month','attendanceData'));
 
