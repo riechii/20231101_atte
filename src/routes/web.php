@@ -21,15 +21,11 @@ Auth::routes(['verify' => true]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/', [TimeController::class, 'index']);
     Route::get('/attendance', [TimeController::class, 'attendancePage']);
     Route::get('/userList', [TimeController::class, 'userList']);
 });
-
-
-
 Route::post('/time', [TimeController::class, 'workStart']);
 Route::post('/time/update', [TimeController::class, 'workEnd']);
 Route::get('/attendance/nextDay', [TimeController::class, 'nextDay']);
@@ -42,4 +38,4 @@ Route::post('/rest/update', [RestController::class, 'restEnd']);
 
 });
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

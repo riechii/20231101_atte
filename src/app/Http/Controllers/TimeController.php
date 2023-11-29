@@ -99,7 +99,7 @@ class TimeController extends Controller
     public function detail(Request $request){
         $userId = $request->input('user_id');
         $user = User::find($userId);
-        //詳細押した時のIDをセッションに保存
+
         session(['remember_user_id' => $userId]);
 
         $month = Carbon::today();

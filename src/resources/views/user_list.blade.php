@@ -21,7 +21,7 @@
                         <td class='user-list__table__item'><button class="user-list__btn__submit" type="submit" value="">詳細</button></td>
                     </tr>
                 </form>
-                 @endforeach
+                @endforeach
             </table>
         </div>
         {{ $users->links() }}
