@@ -33,7 +33,7 @@ laravel学習のために制作しました。成果物の機能やイメージ�
 ## テーブル設計
 ![Atte_table](https://github.com/riechii/20231101_atte/blob/main/Atte_table.png)
 ## ER図
-![Atte_er](https://github.com/riechii/20231101_atte/blob/main/Atte_er.png)
+![Atte_ER](https://github.com/riechii/20231101_atte/blob/main/Atte_ER.png)
 ## 環境構築
 ①laravelプロジェクトを実行したいディレクトリに移動
 
