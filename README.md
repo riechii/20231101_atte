@@ -33,4 +33,29 @@ laravel学習のために制作しました。成果物の機能やイメージ�
 ## テーブル設計
 ![Atte_table](https://github.com/riechii/20231101_atte/blob/main/Atte_table.png)
 ## ER図
-![Atte_ER](https://github.com/riechii/20231101_atte/blob/main/Atte_ER.png)
+![Atte_er](https://github.com/riechii/20231101_atte/blob/main/Atte_er.png)
+## 環境構築
+①laravelプロジェクトを実行したいディレクトリに移動
+
+②$ git clone git@github.com:riechii/20231101_atte.git .
+
+③.evnの作成　$ cp .env.sample .env
+
+④Dockerのコンテナに入る $ docker-compose exec php bash
+
+⑤composerをインストール　$ composer install
+
+⑥$ ls でartisanディレクトリがあることを確認
+
+⑦APP_KEYを作成　$ php artisan key:generate
+
+⑧.envの設定を変える
+
+DB_HOST=DBコンテナのサービス名、 DB_DATABASE、DB_USERNAME、DB_PASSWORD、docker-compose.ymlで作成したデータベース名、ユーザ名、パスワードを記述
+
+⑨localhost:80（Nginxコンテナのポートを80にした場合）にアクセスすると表示されます。
+## aws
+18.177.213.207
+
+awsではバックエンドをEC2、データベースをRDS(Mysql)、ストレージをS3で作成しております。
+ストレージをS3にしているのですが、今回画像保存などの必要がないので設定のみしております。
